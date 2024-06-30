@@ -1,0 +1,4 @@
+opencv-python~=4.10.0.84
+psutil~=5.9.8
+requests~=2.31.0
+Flask~=3.0.3

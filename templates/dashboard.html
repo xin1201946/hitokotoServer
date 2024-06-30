@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hitokoto_server_dashboard</title>
+
+    <style>
+        @font-face {
+            font-family: UNDERTALE;
+            src: url("./fonts") format('woff');
+        }
+        @font-face {
+            font-family: UNDERTALE1;
+            src: url("./fonts?name=MonsterFriend");
+        }
+        body{
+            background-size: 100% 100%;
+            background-attachment: fixed;
+            background-color: transparent;
+        }
+        header{
+            background-color: rgba(252, 252, 252, 0.53);
+            position: fixed;
+            z-index: 999;
+            text-align: left;
+            top: 0;
+            width:100%;
+            height: 50px;
+            backdrop-filter: blur(20px);
+        }
+        a{
+            color: #333333;
+        }
+        a:hover{
+            color: #eae7e7;
+        }
+        .button{
+            text-align: center;
+            background-color: rgba(231, 100, 19, 0);
+            cursor: pointer;
+            border: 2px solid red;
+            z-index: 1000;
+            border-radius: 10px;
+            width: 120px;
+            height: 50px;
+        }
+        .button:hover{
+            background-color: rgba(255, 255, 255, 0);
+        }
+        #log-box {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            height: 500px;
+            width: 97%;
+            color: #f57c3a;
+            overflow-y: scroll;
+            padding: 10px;
+            white-space: pre-wrap;
+        }
+        #dataInput{
+            margin-top: 70px;
+            width: 90%;
+            height: 30px;
+            border-radius: 10px;
+        }input[type="checkbox"] {
+             /*OFF*/
+             appearance: none;
+             width: 64px;
+             height: 32px;
+             position: relative;
+             border-radius: 16px;
+             cursor: pointer;
+             background-color: rgba(208, 8, 8, 0.77);
+         }
+        input[type="checkbox"]:before {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            /*BUTTON COLOR*/
+            background: rgb(255, 255, 255);
+            left: 2px;
+            top: 2px;
+            border-radius: 50%;
+            transition: left cubic-bezier(0.3, 1.5, 0.7, 1) 0.3s;
+        }
+        input[type="checkbox"]:after {
+            content: '🌑  🌝';
+            text-indent: 9px;
+            word-spacing: 2px;
+            display: inline-block;
+            white-space: nowrap;
+            color: white;
+            font: 14px/30px monospace;
+            font-weight: bold;
+        }
+        input[type="checkbox"]:checked {
+            /*ON*/
+            background-color: rgba(6, 1, 2, 0.78);
+        }
+        input[type="checkbox"]:checked:before {
+            left: 34px;
+        }
+        input[type="checkbox"]:checked:after {
+            color: rgb(0, 0, 0);
+        }
+    </style>
+</head>
+<body>
+<header>
+    <span>
+            ADMIN DashBoard
+    </span>
+    <label style="align-self: center">
+        <input id="check_dark_box" type="checkbox">
+    </label>
+    <span>
+            <a style="float: right;margin-right: 40px" href="http://127.0.0.1:5000/loginon">退出登录</a>
+    </span>
+</header>
+
+<footer style="margin-top: 70px">
+    <h1>Console</h1>
+    <div style="font-family: 'Cascadia Mono',sans-serif" id="log-box"></div>
+    <div style="margin-top: 20px">
+
+        <div>
+            <button onclick="function UpdateHitokoto() {
+                fetch ('./update')
+            }
+            UpdateHitokoto()" class="button">UpdateHitkokoto</button>
+            <button class="button" id="clear_log" style="width: 100px;height: 50px">Clear LOG</button>
+            <button class="button" id="serveroff" style="width: 100px;height: 50px">Server Off</button>
+            <button class="button" id="STOPSCROLL" style="width: 100px;height: 50px">STOP_SCROLL</button>
+        </div>
+
+    </div>
+    <label for="dataInput"></label><input type="text" id="dataInput" placeholder="开始输入你的第一条代码吧...">
+    <button class="button" style="height:34px;width: 34px;" id="sendButton">⩥</button>
+    <div><br><br></div>
+    <div>
+        <p style="text-align: center">©2024 <a style="color: rgba(6,1,2,0.89);cursor:default;font-family: 'Pacifico', cursive">CanFeng</a> </p>
+        <p style="text-align: center;font-family: 'UNDERTALE',serif">BUG的修复使你充满了决心</p>
+        <p style="text-align: center;font-family: 'UNDERTALE1',serif">fonts: UNDERTALE</p>
+        <p style="text-align: center; font-family: 'SF Pro', sans-serif;color: gray">ALL RIGHTS RESERVED</p>
+    </div>
+</footer>
+</body>
+<script>
+
+    function runCommand(){
+        var data= document.getElementById('dataInput');
+        var text=document.getElementById('dataInput')
+        fetch('./DashBoardData?command='+data.value)
+        text.value=''
+    }
+
+    function getLogs() {
+        fetch('/logs?justlog=true&isweb=true')
+            .then(response => response.text())
+            .then(data => {
+                const text=document.getElementById('dataInput')
+                const logBox = document.getElementById('log-box');
+                logBox.innerHTML = data;
+                if (text.value !== '#STOP'){
+                    logBox.scrollTop = logBox.scrollHeight;  // 保持滚动条在底部
+                }
+            });
+    }
+    function clearlog(){
+        fetch('/clearlog')
+        const logBox = document.getElementById('log-box');
+        logBox.innerText=''
+    }
+    function serveroff(){
+        fetch('/poweroff')
+    }
+    function checkboxOnclick(checkbox){
+
+        if ( switch_button.checked === true){
+            darkmode('on')
+//Action for checked
+
+        }else{
+            darkmode('off')
+//Action for not checked
+
+        }
+    }
+    /* 暗色模式接口 */
+    function darkmode(mode){
+        if (mode === 'on' || mode ==='ON'){
+            dialog_dark_mode.style.backgroundColor='rgba(0,0,0,0.62)'
+            switch_button.innerText='🌑'
+            switch_button.checked='true'
+        }
+        else{
+            dialog_dark_mode.style.backgroundColor='rgba(255,255,255,0)'
+        }
+    }
+    function stopscroll(){
+        const text =document.getElementById('dataInput')
+        text.value='#STOP'
+    }
+    // Fetch server info on page load
+    const clear_log=document.getElementById('clear_log')
+    const server_off=document.getElementById('serveroff')
+    const run_command=document.getElementById('sendButton')
+    const dialog_dark_mode=document.querySelector("body")
+    const switch_button=document.getElementById('check_dark_box')
+    const STOPSCROLL=document.getElementById('STOPSCROLL')
+    STOPSCROLL.addEventListener('click',stopscroll)
+    switch_button.addEventListener('click',checkboxOnclick)
+    run_command.addEventListener('click',runCommand)
+    clear_log.addEventListener('click',clearlog)
+    server_off.addEventListener('click',serveroff)
+    setInterval(getLogs, 5000);
+    window.onload = getLogs;
+</script>
+</html>

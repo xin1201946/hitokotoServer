@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        .login_body {
+            background-image: url("./templates/images/bizhi.jpg");
+            background-size: 100% 100%;
+            background-attachment: fixed;
+            background-color: transparent;
+            font-family: 'SF Pro', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: rgba(58, 57, 57, 0.39);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-container button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-container button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body class="login_body">
+<div class="login-container">
+    <img src="./templates/images/logo.jpg" style="width:25%;border-radius: 40px" alt="">
+
+    <form id="loginForm" style="margin-top: 20px">
+        <label for="username"></label><input type="text" id="username" name="user" placeholder="用户名" required style="border-radius: 10px;background-color: rgba(255,255,255,0);backdrop-filter: blur(20px)">
+        <label for="password" ></label>  <input type="password" autocomplete="current-password"  id="password" name="pass" placeholder="密码" required style="border-radius: 10px;background-color: rgba(255,255,255,0);backdrop-filter: blur(20px)">
+        <button type="submit">登录</button>
+        <div class="error" id="error"></div>
+        <div>
+            <p style="text-align: center">©2024 <a style="color: rgba(243,234,232,0.51);cursor:default;font-family: 'Pacifico', cursive">CanFeng</a> </p>
+            <p style="text-align: center; font-family: 'SF Pro', sans-serif;color: gray">ALL RIGHTS RESERVED</p>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const loginUrl = `/login?user=${encodeURIComponent(username)}&pass=${encodeURIComponent(password)}`;
+
+        fetch(loginUrl)
+            .then(response => response.text())
+            .then(data => {
+                if (data === 'Wrong Name OR Password') {
+                    document.getElementById('错误').textContent = 'Wrong Name OR Password';
+                } else {
+                    document.open();
+                    document.write(data);
+                    document.close();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('error').textContent = 'An error occurred. Please try again.';
+            });
+    });
+</script>
+</body>
+</html>
